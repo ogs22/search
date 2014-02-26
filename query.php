@@ -84,6 +84,7 @@ if (php_sapi_name() == 'cli') {
 }
 
 if ($_GET['search']) {
+        header('Access-Control-Allow-Origin: *');
 	$search = new CmepSearch($_GET['term']);
 	if ($search->num_results > 0) {
 		header('content-type: application/json; charset=utf-8');
