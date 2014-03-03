@@ -40,6 +40,7 @@ CREATE TABLE `cmepsearch` (
   `page` text,
   `title` varchar(200) DEFAULT NULL,
   `content` text,
+  `site` text,
   PRIMARY KEY (`id`),
   FULLTEXT KEY `title` (`title`,`content`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1357 DEFAULT CHARSET=latin1;

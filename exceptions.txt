@@ -1,2 +1,6 @@
 bower_components
 404.html
+internal
+levelthree-401.html
+leveltwo-401.html
+auth

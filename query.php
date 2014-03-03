@@ -4,6 +4,7 @@ define("DB_HOST",'localhost');
 define("DB_USER",'cmep');
 define("DB_PASS",'@PASSWORD@');
 define("DB_NAME",'cmepsearch');
+header('Access-Control-Allow-Origin: *');
 
 /**
 * 
@@ -12,12 +13,17 @@ class CmepSearch {
 	public $num_results = 0;
 	public $limit = 25;
 	public $type = "all";
+	public $site = "all";
 	
-	function __construct($term) {
+	function __construct($term,$site='fenman') {
 		if ($term == ''){
 			return false;
 		}
+		if ($site == '') {
+			$site = 'fenman';
+		}
 		$this->cdb();
+		$this->site = $site;
 		$this->term = mysqli_real_escape_string($this->link,$term);
 		$this->doSearch();
 		$this->getResults();
@@ -56,18 +62,18 @@ class CmepSearch {
 
 	private function normal() {
 		$sql = "SELECT title,page, MATCH (title,content) AGAINST ('".$this->term."') AS score 
-		FROM cmepsearch WHERE MATCH (title,content) AGAINST ('".$this->term."') limit ".$this->limit;
+		FROM cmepsearch WHERE MATCH (title,content) AGAINST ('".$this->term."') and site = '".$this->site."' limit ".$this->limit;
 		return $sql;
 	}
 
 	private function expand() {
 		$sql = "SELECT title,page, MATCH (title,content) AGAINST ('".$this->term."' WITH QUERY EXPANSION) AS score 
-		FROM cmepsearch WHERE MATCH (title,content) AGAINST ('".$this->term."' WITH QUERY EXPANSION) limit ".$this->limit;
+		FROM cmepsearch WHERE MATCH (title,content) AGAINST ('".$this->term."' WITH QUERY EXPANSION) and site = '".$this->site."' limit ".$this->limit;
 		return $sql;
 	}
 
 	private function like() {
-		$sql = "SELECT title,page from cmepsearch where content like '%".$this->term."%' limit ".$this->limit;
+		$sql = "SELECT title,page from cmepsearch where content like '%".$this->term."%' and site = '".$this->site."' limit ".$this->limit;
 		return $sql;
 	}
 
@@ -76,16 +82,17 @@ class CmepSearch {
 if (php_sapi_name() == 'cli') {
     $_GET['search'] = true;
     $_GET['term'] = $argv[1];
+    $_GET['site'] = $argv[2];
     if ($_GET['term']=='') {
     	echo "\nNo search term entered.\n";
-    	echo "CMD line usage: ".$argv[0]." search_term\n\n";
+    	echo "CMD line usage: php ".$argv[0]." search_term site_name\n\n";
+    	echo "php ".$argv[0]." triangle fenman\n\n";
     	exit();
     }
 }
 
 if ($_GET['search']) {
-        header('Access-Control-Allow-Origin: *');
-	$search = new CmepSearch($_GET['term']);
+	$search = new CmepSearch($_GET['term'],$_GET['site']);
 	if ($search->num_results > 0) {
 		header('content-type: application/json; charset=utf-8');
 		print $search->outputJson();

@@ -1,6 +1,6 @@
 <?php
 
-define("SITE_PATH", '/www/cmep/html/fenman');
+define("SITE_PATH", '/www/cmep/html');
 define("DOC_ROOT",'/www/cmep/html/');
 define("ROOT_URL", 'http://cmep.maths.org/');
 define("DB_HOST",'localhost');
@@ -119,6 +119,16 @@ class Indexer {
 		return $files;
 	}
 
+	private function getSite($page) {
+		$page = str_replace(ROOT_URL,'',$page);
+		$exp = explode('/', $page);
+		$site = $exp[0];
+		if ($site == '') {
+			$site = 'fenman';
+		}
+		return $site;
+	}
+
 	public function indexsite() {
 		$files = array();
 		$this->recurseDir(SITE_PATH,$files);
@@ -128,10 +138,11 @@ class Indexer {
 			$title = mysqli_real_escape_string($this->link, $this->getTitle($content));
 			$content = mysqli_real_escape_string($this->link, $this->scrape($content));
 			$page = str_replace(DOC_ROOT, ROOT_URL, $filename);
+			$site = $this->getSite($page);
 			if ($this->verbose) {
 				echo $filename."::'".$title."' added to index\n";
 			}
-			$sql = 'INSERT INTO cmepsearch (page,title,content) VALUES ("'.$page.'","'.$title.'","'.$content.'")';
+			$sql = 'INSERT INTO cmepsearch (page,title,content,site) VALUES ("'.$page.'","'.$title.'","'.$content.'","'.$site.'")';
 			$result = $this->link->query($sql) or die($sql);
 		}
 	}
