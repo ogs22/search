@@ -23,7 +23,7 @@ class CmepSearch {
 			$site = 'fenman';
 		}
 		$this->cdb();
-		$this->site = $site;
+		$this->site = mysqli_real_escape_string($this->link,$site);
 		$this->term = mysqli_real_escape_string($this->link,$term);
 		$this->doSearch();
 		$this->getResults();
