@@ -20,7 +20,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 create database cmepsearch;
-CREATE USER 'cmep'@'localhost' IDENTIFIED BY '@PASSWORD@';
+CREATE USER 'cmep'@'localhost' IDENTIFIED BY '88hwefce';
 GRANT ALL PRIVILEGES ON cmepsearch.* to 'cmep'@'localhost';
 FLUSH PRIVILEGES;
 
@@ -41,6 +41,7 @@ CREATE TABLE `cmepsearch` (
   `title` varchar(200) DEFAULT NULL,
   `content` text,
   `site` text,
+  `meta` text,
   PRIMARY KEY (`id`),
   FULLTEXT KEY `title` (`title`,`content`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1357 DEFAULT CHARSET=latin1;

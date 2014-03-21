@@ -5,7 +5,7 @@ define("DOC_ROOT",'/www/cmep/html/');
 define("ROOT_URL", 'http://cmep.maths.org/');
 define("DB_HOST",'localhost');
 define("DB_USER",'cmep');
-define("DB_PASS",'@PASSWORD@');
+define("DB_PASS",'88hwefce');
 define("DB_NAME",'cmepsearch');
 
 /**
@@ -129,6 +129,45 @@ class Indexer {
 		return $site;
 	}
 
+	private function getMeta($filename) {
+		$jsonfile = str_replace(".html", ".json", $filename);
+		
+		if (file_exists($jsonfile)) {
+			$content = file_get_contents($jsonfile);
+			$test = json_decode($content);
+			switch (json_last_error()) {
+				case JSON_ERROR_NONE:
+				echo ' - No JSON errors';
+				break;
+				case JSON_ERROR_DEPTH:
+				echo ' - Maximum stack depth exceeded';
+				break;
+				case JSON_ERROR_STATE_MISMATCH:
+				echo ' - Underflow or the modes mismatch';
+				break;
+				case JSON_ERROR_CTRL_CHAR:
+				echo ' - Unexpected control character found';
+				break;
+				case JSON_ERROR_SYNTAX:
+				echo ' - Syntax error, malformed JSON';
+				break;
+				case JSON_ERROR_UTF8:
+				echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+				break;
+				default:
+				echo ' - Unknown error';
+				break;
+			}
+			echo "\n";
+		} else {
+			$content = '';
+			if ($this->verbose) {
+				echo $filename." has no json metadata file\n";
+			}
+		}
+		return $content;
+	}
+
 	public function indexsite() {
 		$files = array();
 		$this->recurseDir(SITE_PATH,$files);
@@ -139,10 +178,11 @@ class Indexer {
 			$content = mysqli_real_escape_string($this->link, $this->scrape($content));
 			$page = str_replace(DOC_ROOT, ROOT_URL, $filename);
 			$site = $this->getSite($page);
+			$meta = mysqli_real_escape_string($this->link,$this->getMeta($filename));
 			if ($this->verbose) {
 				echo $filename."::'".$title."' added to index\n";
 			}
-			$sql = 'INSERT INTO cmepsearch (page,title,content,site) VALUES ("'.$page.'","'.$title.'","'.$content.'","'.$site.'")';
+			$sql = 'INSERT INTO cmepsearch (page,title,content,site,meta) VALUES ("'.$page.'","'.$title.'","'.$content.'","'.$site.'","'.$meta.'")';
 			$result = $this->link->query($sql) or die($sql);
 		}
 	}

@@ -2,7 +2,7 @@
 
 define("DB_HOST",'localhost');
 define("DB_USER",'cmep');
-define("DB_PASS",'@PASSWORD@');
+define("DB_PASS",'88hwefce');
 define("DB_NAME",'cmepsearch');
 header('Access-Control-Allow-Origin: *');
 
@@ -33,9 +33,19 @@ class CmepSearch {
 		return json_encode($this->raw);
 	}
 
+
 	private function getResults() {
 		while($row = mysqli_fetch_assoc($this->result)) {
-        	$this->raw[]=$row;
+			$x = array();
+			$meta = array();
+			$x['title'] = $row['title'];
+			$x['page'] = $row['page'];
+			$x['score'] = $row['score'];
+			if ($row['meta']!='') {
+				$meta = json_decode($row['meta'],true);
+			}	
+			$raw = array_merge($x,$meta);
+        	$this->raw[]=$raw;
         }
     }
 
@@ -61,19 +71,19 @@ class CmepSearch {
 	}
 
 	private function normal() {
-		$sql = "SELECT title,page, MATCH (title,content) AGAINST ('".$this->term."') AS score 
+		$sql = "SELECT meta,title,page, MATCH (title,content) AGAINST ('".$this->term."') AS score 
 		FROM cmepsearch WHERE MATCH (title,content) AGAINST ('".$this->term."') and site = '".$this->site."' limit ".$this->limit;
 		return $sql;
 	}
 
 	private function expand() {
-		$sql = "SELECT title,page, MATCH (title,content) AGAINST ('".$this->term."' WITH QUERY EXPANSION) AS score 
+		$sql = "SELECT meta,title,page, MATCH (title,content) AGAINST ('".$this->term."' WITH QUERY EXPANSION) AS score 
 		FROM cmepsearch WHERE MATCH (title,content) AGAINST ('".$this->term."' WITH QUERY EXPANSION) and site = '".$this->site."' limit ".$this->limit;
 		return $sql;
 	}
 
 	private function like() {
-		$sql = "SELECT title,page from cmepsearch where content like '%".$this->term."%' and site = '".$this->site."' limit ".$this->limit;
+		$sql = "SELECT meta,title,page from cmepsearch where content like '%".$this->term."%' and site = '".$this->site."' limit ".$this->limit;
 		return $sql;
 	}
 
