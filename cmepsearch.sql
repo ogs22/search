@@ -20,7 +20,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 create database cmepsearch;
-CREATE USER 'cmep'@'localhost' IDENTIFIED BY '88hwefce';
+CREATE USER 'cmep'@'localhost' IDENTIFIED BY '@PASSWORD@';
 GRANT ALL PRIVILEGES ON cmepsearch.* to 'cmep'@'localhost';
 FLUSH PRIVILEGES;
 

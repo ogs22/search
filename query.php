@@ -2,7 +2,7 @@
 
 define("DB_HOST",'localhost');
 define("DB_USER",'cmep');
-define("DB_PASS",'88hwefce');
+define("DB_PASS",'@PASSWORD@');
 define("DB_NAME",'cmepsearch');
 header('Access-Control-Allow-Origin: *');
 
@@ -101,7 +101,10 @@ if (php_sapi_name() == 'cli') {
     }
 }
 
-if ($_GET['search']) {
+if ($_GET['search'] and $_GET['term']) {
+   if (!isset($_GET['site'])) {
+      $_GET['site'] ='';
+   }
 	$search = new CmepSearch($_GET['term'],$_GET['site']);
 	if ($search->num_results > 0) {
 		header('content-type: application/json; charset=utf-8');
