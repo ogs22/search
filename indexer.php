@@ -100,7 +100,10 @@ class Indexer {
 	private function getTitle($data) {
 		$pat = '!<title>([a-z].*)</title>!ims';
 		preg_match($pat, $data,$matches);
-		return $matches[1];
+		if (isset($matches[1])) {
+		   return $matches[1];
+		}
+		return false;
 	}
 
 	private function removeUnwanted($files) {
