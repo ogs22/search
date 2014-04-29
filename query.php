@@ -2,7 +2,7 @@
 
 define("DB_HOST",'localhost');
 define("DB_USER",'cmep');
-define("DB_PASS",'@PASSWORD@');
+define("DB_PASS",'88hwefce');
 define("DB_NAME",'cmepsearch');
 header('Access-Control-Allow-Origin: *');
 
