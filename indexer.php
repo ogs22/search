@@ -5,7 +5,7 @@ define("DOC_ROOT",'/www/cmep/html/');
 define("ROOT_URL", 'http://cmep.maths.org/');
 define("DB_HOST",'localhost');
 define("DB_USER",'cmep');
-define("DB_PASS",'88hwefce');
+define("DB_PASS",'@PASSWORD@');
 define("DB_NAME",'cmepsearch');
 
 /**
@@ -208,8 +208,6 @@ if (php_sapi_name() == 'cli') {
 	echo "Only use by the CMD line.";
 	exit();
 }
-
-
 
 
 
