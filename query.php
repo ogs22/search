@@ -40,7 +40,11 @@ class CmepSearch {
 			$meta = array();
 			$x['title'] = $row['title'];
 			$x['page'] = $row['page'];
-			$x['score'] = $row['score'];
+			if (isset($row['score'])) {
+			   $x['score'] = $row['score'];
+			} else {
+			   $x['score'] = 0;
+			}
 			if ($row['meta']!='') {
 				$meta = json_decode($row['meta'],true);
 			}	
